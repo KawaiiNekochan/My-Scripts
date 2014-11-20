@@ -14,7 +14,12 @@ local Rrange, Rradius, Rdelay = 650, 500, 0.25
 PrintChat("You are using Simple Evelynn by Kawaii Nekochan.")
 
 function OnLoad()
+	VP = VPrediction(true)
+	STS = SimpleTS(STS_LESS_CAST_PHYSICAL)
+	
 	EveMenu = scriptConfig("Simple Evelynn v1", "Evelynn")
+	EveMenu:addSubMenu("Target Selector", "STS")
+	STS.AddToMenu(EveMenu.STS)
 	EveMenu:addSubMenu("Combo", "Combo")
 	EveMenu.Combo:addParam("combokey", "Combo Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte(" "))
 	EveMenu.Combo:addParam("ult", "Press R to use Ultimate", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("R"))
@@ -62,7 +67,7 @@ function OnTick()
 end
 
 function _Combo()
-	local target = SimpleTS(STS_LESS_CAST_PHYSICAL):GetTarget(Qrange)
+	local target = STS:GetTarget(Qrange)
 	if My.Hero:CanUseSpell(_R) == READY and EveMenu.Combo.autoult and TargetsInUlt(GetAoESpellPrediction(Rradius, target), Rradius) then
 		_Ult()
 	end
@@ -78,7 +83,7 @@ function _Combo()
 end
 
 function _Ult()
-local position = VPrediction:GetPredictedEnemyPos(enemy, Rdelay)
+local position = VP:GetPredictedEnemyPos(enemy, Rdelay)
 	if myHero:CanUseSpell(_R) == READY and GetDistance(position) <= Rrange then
 	CastSpell(_R, position.x, position.z)
 	end
