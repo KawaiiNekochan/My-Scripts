@@ -67,18 +67,20 @@ function OnTick()
 end
 
 function _Combo()
-	local target = STS:GetTarget(Qrange)
-	if My.Hero:CanUseSpell(_R) == READY and EveMenu.Combo.autoult and TargetsInUlt(GetAoESpellPrediction(Rradius, target), Rradius) then
-		_Ult()
-	end
 	if My.Hero:CanUseSpell(_W) == READY and ValidTarget(target) and GetDistance(target) <= Qrange + 100 then
 		CastSpell(_W)
 	end
+	local target = STS:GetTarget(Qrange)
 	if myHero:CanUseSpell(_Q) == READY and ValidTarget(target) and GetDistance(target) <= Qrange then
 		CastSpell(_Q)
 	end
+	local target = STS:GetTarget(Erange)
 	if myHero:CanUseSpell(_E) == READY and ValidTarget(target) and GetDistance(target) <= Erange then
 		CastSpell(_E)
+	end
+	local target = STS:GetTarget(Rrange)
+	if My.Hero:CanUseSpell(_R) == READY and EveMenu.Combo.autoult and TargetsInUlt(GetAoESpellPrediction(Rradius, target), Rradius) then
+		_Ult()
 	end
 end
 
