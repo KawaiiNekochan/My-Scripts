@@ -1,6 +1,6 @@
 -- Simple Evelynn v1 --
 -- By: Kawaii Nekochan --
-if GetMyHero().charName ~= "Evelynn" and not VIP_USER then
+if GetMyHero().charName ~= "Evelynn" then
 return
 end
 
