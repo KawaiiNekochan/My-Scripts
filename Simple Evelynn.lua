@@ -4,42 +4,21 @@ if GetMyHero().charName ~= "Evelynn" then
 return
 end
 
-require 'VPrediction'
-require 'SourceLib'
 require 'AoE_Skillshot_Position'
+require 'VPrediction'
 
 local Qrange = 700
 local Erange = 225
 local Rrange, Rradius, Rdelay = 650, 500, 0.25
-PrintChat("You are using Simple Evelynn by Kawaii Nekochan.")
 
 function OnLoad()
-	VP = VPrediction(true)
-	STS = SimpleTS(STS_LESS_CAST_PHYSICAL)
-	
-	EveMenu = scriptConfig("Simple Evelynn v1", "Evelynn")
-	EveMenu:addSubMenu("Target Selector", "STS")
-	STS.AddToMenu(EveMenu.STS)
-	EveMenu:addSubMenu("Combo", "Combo")
-	EveMenu.Combo:addParam("combokey", "Combo Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte(" "))
-	EveMenu.Combo:addParam("ult", "Press R to use Ultimate", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("R"))
-	EveMenu.Combo:addParam("autoult", "Auto use Ult if 3 or more enemies in range", SCRIPT_PARAM_ONOFF, false)
-	EveMenu:addSubMenu("AutoLvl", "Auto Level")
-	EveMenu.AutoLvl:addParam("autolvl" , "Auto Level Spells", SCRIPT_PARAM_ONOFF, false)
-	EveMenu:addSubMenu("Drawing", "Drawing")
-	EvenMenu.Drawing:addParam("DrawAA", "Draw AA Range", SCRIPT_PARAM_ONOFF, true)
-	EvenMenu.Drawing:addParam("DrawQ", "Draw Q Range", SCRIPT_PARAM_ONOFF, true)
-	EvenMenu.Drawing:addParam("DrawE", "Draw E Range", SCRIPT_PARAM_ONOFF, true)
-	EvenMenu.Drawing:addParam("DrawR", "Draw R Range", SCRIPT_PARAM_ONOFF, true)
-	EveMenu:permaShow("combokey")
-	EveMenu:permaShow("autoult")
-	EveMenu:permaShow("autolvl")
-
+	PrintChat("You are using Simple Evelynn by Kawaii Nekochan.")
+	_LoadLib()
 end
 
 function OnDraw()
 	if EveMenu.Drawing.DrawAA then
-		DrawCircle3D(myHero.x, myHero.y, myHero.z, 125, 0x00FF00)
+		DrawCircle(myHero.x, myHero.y, myHero.z, 125, 0x00FF00)
 	end
 	if EveMenu.Drawing.DrawQ then
 		DrawCircle3D(myHero.x, myHero.y, myHero.z, Qrange, 0x00FF00)
@@ -63,7 +42,6 @@ function OnTick()
 	if EveMenu.AutoLvl.autolevel then
 		_AutoLvl()
 	end
-
 end
 
 function _Combo()
@@ -106,4 +84,36 @@ end
 function _AutoLvl()
 	Sequence = {1,3,2,1,1,4,3,1,3,1,4,3,3,2,2,4,2,2}
 	autoLevelSetSequence(Sequence)
+end
+
+function _LoadLib()
+	VP = VPrediction()
+	STS = SimpleTS(STS_LESS_CAST)
+	_LoadMenu()
+end
+
+function _LoadMenu()
+	EveMenu = scriptConfig("Simple Evelynn", "Evelynn")
+	
+	EveMenu:addSubMenu("Target Selector", "STS")
+	STS:AddToMenu(EveMenu.STS)
+	
+	EveMenu:addSubMenu("Combo", "Combo")
+	EveMenu.Combo:addParam("combokey", "Combo Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte(" "))
+	EveMenu.Combo:addParam("ult", "Press R to use Ultimate", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("R"))
+	EveMenu.Combo:addParam("autoult", "Auto use Ult", SCRIPT_PARAM_ONOFF, false)
+	
+	EveMenu:addSubMenu("AutoLvl", "Auto Level")
+	EveMenu.AutoLvl:addParam("autolvl" , "Auto Level Spells", SCRIPT_PARAM_ONOFF, false)
+	
+	EveMenu:addSubMenu("Drawing", "Drawing")
+	EveMenu.Drawing:addParam("DrawAA", "Draw AA Range", SCRIPT_PARAM_ONOFF, true)
+	EveMenu.Drawing:addParam("DrawQ", "Draw Q Range", SCRIPT_PARAM_ONOFF, true)
+	EveMenu.Drawing:addParam("DrawE", "Draw E Range", SCRIPT_PARAM_ONOFF, true)
+	EveMenu.Drawing:addParam("DrawR", "Draw R Range", SCRIPT_PARAM_ONOFF, true)
+	
+	EveMenu:permaShow("combokey")
+	EveMenu:permaShow("autoult")
+	EveMenu:permaShow("autolvl")
+	
 end
